@@ -11,6 +11,7 @@ import ActivityList from "@/components/ActivityList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, BarChart } from "lucide-react";
+import MainNav from "@/components/MainNav";
 
 const Index = () => {
   const [showNotification, setShowNotification] = useState(false);
@@ -59,6 +60,10 @@ const Index = () => {
 
   return (
     <div className="container py-8 px-4 max-w-6xl">
+      <div className="mb-6">
+        <MainNav />
+      </div>
+      
       <header className="text-center mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Hourly Activity Logger</h1>
         <p className="text-muted-foreground mt-2">
