@@ -1,8 +1,9 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BellRing, Clock, Volume2 } from "lucide-react";
+import { BellRing, Clock, Volume2, Settings } from "lucide-react";
 import RingtoneSelector from "@/components/RingtoneSelector";
 import { getRingtone, saveRingtone } from "@/utils/audioSettings";
 
@@ -42,11 +43,18 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ isOpen, onClose }
             </Button>
           </div>
           
-          <div className="flex justify-center mt-2">
+          <div className="flex justify-center mt-2 gap-2">
             <RingtoneSelector 
               onSelect={handleRingtoneSelect}
               currentRingtone={currentRingtone}
             />
+            
+            <Link to="/settings">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Settings className="h-4 w-4" />
+                <span>Advanced Settings</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </DialogContent>

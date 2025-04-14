@@ -2,6 +2,7 @@
 const RINGTONE_KEY = "hourly-alert-ringtone";
 const VOLUME_KEY = "hourly-alert-volume";
 const ENABLED_KEY = "hourly-alert-enabled";
+const CUSTOM_RINGTONES_KEY = "custom-ringtones";
 
 // Default ringtone path
 const DEFAULT_RINGTONE = "/sounds/bell.mp3";
@@ -21,7 +22,7 @@ export const saveVolume = (volume: number): void => {
 
 export const getVolume = (): number => {
   const volume = localStorage.getItem(VOLUME_KEY);
-  return volume ? parseFloat(volume) : 1.0; // Default to 100% volume
+  return volume ? parseFloat(volume) : 0.7; // Default to 70% volume
 };
 
 export const saveEnabled = (enabled: boolean): void => {
@@ -31,4 +32,15 @@ export const saveEnabled = (enabled: boolean): void => {
 export const getEnabled = (): boolean => {
   const enabled = localStorage.getItem(ENABLED_KEY);
   return enabled === null ? true : enabled === "true"; // Default to enabled
+};
+
+export const saveCustomRingtone = (name: string, url: string): void => {
+  const existingRingtones = getCustomRingtones();
+  existingRingtones.push({ name, url });
+  localStorage.setItem(CUSTOM_RINGTONES_KEY, JSON.stringify(existingRingtones));
+};
+
+export const getCustomRingtones = (): Array<{ name: string; url: string }> => {
+  const ringtones = localStorage.getItem(CUSTOM_RINGTONES_KEY);
+  return ringtones ? JSON.parse(ringtones) : [];
 };

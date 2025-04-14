@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { getRingtone, getEnabled } from "@/utils/audioSettings";
+import { getRingtone, getEnabled, getVolume } from "@/utils/audioSettings";
 
 interface UseHourlyAlertProps {
   onHourChange: () => void;
@@ -15,6 +15,10 @@ export function useHourlyAlert({ onHourChange }: UseHourlyAlertProps) {
   // Initialize audio element
   useEffect(() => {
     audioRef.current = new Audio(getRingtone());
+    if (audioRef.current) {
+      audioRef.current.volume = getVolume();
+    }
+    
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -38,8 +42,9 @@ export function useHourlyAlert({ onHourChange }: UseHourlyAlertProps) {
         
         // Play the notification sound if enabled
         if (getEnabled() && audioRef.current) {
-          // Update the audio source in case it was changed
+          // Update the audio source and volume in case they were changed
           audioRef.current.src = getRingtone();
+          audioRef.current.volume = getVolume();
           audioRef.current.play().catch(error => {
             console.error("Error playing audio:", error);
           });
@@ -70,6 +75,7 @@ export function useHourlyAlert({ onHourChange }: UseHourlyAlertProps) {
   const playRingtone = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.src = getRingtone();
+      audioRef.current.volume = getVolume();
       audioRef.current.play().catch(error => {
         console.error("Error playing audio:", error);
       });
