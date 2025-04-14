@@ -25,7 +25,7 @@ const Index = () => {
     });
   }, []);
 
-  const { formatTime, hourProgress } = useHourlyAlert({
+  const { formatTime, hourProgress, playRingtone } = useHourlyAlert({
     onHourChange: handleHourChange,
   });
 

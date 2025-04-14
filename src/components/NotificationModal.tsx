@@ -2,7 +2,9 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BellRing, Clock } from "lucide-react";
+import { BellRing, Clock, Volume2 } from "lucide-react";
+import RingtoneSelector from "@/components/RingtoneSelector";
+import { getRingtone, saveRingtone } from "@/utils/audioSettings";
 
 interface NotificationModalProps {
   isOpen: boolean;
@@ -10,6 +12,13 @@ interface NotificationModalProps {
 }
 
 const NotificationModal: React.FC<NotificationModalProps> = ({ isOpen, onClose }) => {
+  const [currentRingtone, setCurrentRingtone] = React.useState(getRingtone());
+
+  const handleRingtoneSelect = (ringtoneUrl: string) => {
+    setCurrentRingtone(ringtoneUrl);
+    saveRingtone(ringtoneUrl);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md animate-fade-in">
@@ -25,10 +34,20 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ isOpen, onClose }
             </div>
           </DialogDescription>
         </DialogHeader>
-        <div className="flex justify-center">
-          <Button onClick={onClose} className="px-8">
-            Log Activity
-          </Button>
+        
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-center">
+            <Button onClick={onClose} className="px-8">
+              Log Activity
+            </Button>
+          </div>
+          
+          <div className="flex justify-center mt-2">
+            <RingtoneSelector 
+              onSelect={handleRingtoneSelect}
+              currentRingtone={currentRingtone}
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
