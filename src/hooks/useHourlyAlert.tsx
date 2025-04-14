@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getRingtone, getEnabled, getVolume } from "@/utils/audioSettings";
+import { toast } from "sonner";
 
 interface UseHourlyAlertProps {
   onHourChange: () => void;
@@ -14,9 +15,17 @@ export function useHourlyAlert({ onHourChange }: UseHourlyAlertProps) {
 
   // Initialize audio element
   useEffect(() => {
-    audioRef.current = new Audio(getRingtone());
+    audioRef.current = new Audio();
+    
+    // Pre-load the current ringtone
     if (audioRef.current) {
-      audioRef.current.volume = getVolume();
+      try {
+        audioRef.current.src = getRingtone();
+        audioRef.current.volume = getVolume();
+        audioRef.current.load();
+      } catch (error) {
+        console.error("Error initializing audio:", error);
+      }
     }
     
     return () => {
@@ -41,13 +50,8 @@ export function useHourlyAlert({ onHourChange }: UseHourlyAlertProps) {
         onHourChange();
         
         // Play the notification sound if enabled
-        if (getEnabled() && audioRef.current) {
-          // Update the audio source and volume in case they were changed
-          audioRef.current.src = getRingtone();
-          audioRef.current.volume = getVolume();
-          audioRef.current.play().catch(error => {
-            console.error("Error playing audio:", error);
-          });
+        if (getEnabled()) {
+          playRingtone();
         }
       }
     }, 1000);
@@ -73,12 +77,31 @@ export function useHourlyAlert({ onHourChange }: UseHourlyAlertProps) {
 
   // Function to manually play the current ringtone
   const playRingtone = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.src = getRingtone();
-      audioRef.current.volume = getVolume();
-      audioRef.current.play().catch(error => {
-        console.error("Error playing audio:", error);
-      });
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+
+    try {
+      // Get latest settings
+      const ringtoneSrc = getRingtone();
+      const volume = getVolume();
+
+      // Configure audio
+      audioRef.current.src = ringtoneSrc;
+      audioRef.current.volume = volume;
+      
+      // Handle successful play
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error("Error playing ringtone:", error);
+          toast("Sound playback failed", {
+            description: "There was an issue playing the notification sound."
+          });
+        });
+      }
+    } catch (error) {
+      console.error("Error setting up ringtone playback:", error);
     }
   }, []);
 

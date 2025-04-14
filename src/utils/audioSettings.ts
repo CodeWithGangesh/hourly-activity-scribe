@@ -8,39 +8,75 @@ const CUSTOM_RINGTONES_KEY = "custom-ringtones";
 const DEFAULT_RINGTONE = "/sounds/bell.mp3";
 
 export const saveRingtone = (ringtoneUrl: string): void => {
-  localStorage.setItem(RINGTONE_KEY, ringtoneUrl);
+  try {
+    localStorage.setItem(RINGTONE_KEY, ringtoneUrl);
+  } catch (error) {
+    console.error("Error saving ringtone:", error);
+  }
 };
 
 export const getRingtone = (): string => {
-  const ringtone = localStorage.getItem(RINGTONE_KEY);
-  return ringtone || DEFAULT_RINGTONE;
+  try {
+    const ringtone = localStorage.getItem(RINGTONE_KEY);
+    return ringtone || DEFAULT_RINGTONE;
+  } catch (error) {
+    console.error("Error getting ringtone:", error);
+    return DEFAULT_RINGTONE;
+  }
 };
 
 export const saveVolume = (volume: number): void => {
-  localStorage.setItem(VOLUME_KEY, volume.toString());
+  try {
+    localStorage.setItem(VOLUME_KEY, volume.toString());
+  } catch (error) {
+    console.error("Error saving volume:", error);
+  }
 };
 
 export const getVolume = (): number => {
-  const volume = localStorage.getItem(VOLUME_KEY);
-  return volume ? parseFloat(volume) : 0.7; // Default to 70% volume
+  try {
+    const volume = localStorage.getItem(VOLUME_KEY);
+    return volume ? parseFloat(volume) : 0.7; // Default to 70% volume
+  } catch (error) {
+    console.error("Error getting volume:", error);
+    return 0.7;
+  }
 };
 
 export const saveEnabled = (enabled: boolean): void => {
-  localStorage.setItem(ENABLED_KEY, enabled.toString());
+  try {
+    localStorage.setItem(ENABLED_KEY, enabled.toString());
+  } catch (error) {
+    console.error("Error saving enabled state:", error);
+  }
 };
 
 export const getEnabled = (): boolean => {
-  const enabled = localStorage.getItem(ENABLED_KEY);
-  return enabled === null ? true : enabled === "true"; // Default to enabled
+  try {
+    const enabled = localStorage.getItem(ENABLED_KEY);
+    return enabled === null ? true : enabled === "true"; // Default to enabled
+  } catch (error) {
+    console.error("Error getting enabled state:", error);
+    return true;
+  }
 };
 
 export const saveCustomRingtone = (name: string, url: string): void => {
-  const existingRingtones = getCustomRingtones();
-  existingRingtones.push({ name, url });
-  localStorage.setItem(CUSTOM_RINGTONES_KEY, JSON.stringify(existingRingtones));
+  try {
+    const existingRingtones = getCustomRingtones();
+    existingRingtones.push({ name, url });
+    localStorage.setItem(CUSTOM_RINGTONES_KEY, JSON.stringify(existingRingtones));
+  } catch (error) {
+    console.error("Error saving custom ringtone:", error);
+  }
 };
 
 export const getCustomRingtones = (): Array<{ name: string; url: string }> => {
-  const ringtones = localStorage.getItem(CUSTOM_RINGTONES_KEY);
-  return ringtones ? JSON.parse(ringtones) : [];
+  try {
+    const ringtones = localStorage.getItem(CUSTOM_RINGTONES_KEY);
+    return ringtones ? JSON.parse(ringtones) : [];
+  } catch (error) {
+    console.error("Error getting custom ringtones:", error);
+    return [];
+  }
 };

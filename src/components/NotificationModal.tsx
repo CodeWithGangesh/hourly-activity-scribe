@@ -3,9 +3,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BellRing, Clock, Volume2, Settings } from "lucide-react";
+import { BellRing, Clock, Volume2, Settings, Music } from "lucide-react";
 import RingtoneSelector from "@/components/RingtoneSelector";
 import { getRingtone, saveRingtone } from "@/utils/audioSettings";
+import { toast } from "sonner";
 
 interface NotificationModalProps {
   isOpen: boolean;
@@ -18,6 +19,9 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ isOpen, onClose }
   const handleRingtoneSelect = (ringtoneUrl: string) => {
     setCurrentRingtone(ringtoneUrl);
     saveRingtone(ringtoneUrl);
+    toast("Sound updated", {
+      description: "Your notification sound has been updated.",
+    });
   };
 
   return (
